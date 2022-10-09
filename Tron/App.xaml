@@ -1,0 +1,13 @@
+﻿<Application x:Class="Tron.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:Tron"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <SolidColorBrush x:Key="BackgroundColor">#043C6B</SolidColorBrush>
+        <SolidColorBrush x:Key="GridBackgroundColor">#0B5FA5</SolidColorBrush>
+        <SolidColorBrush x:Key="GridLineColor">#66A1D2</SolidColorBrush>
+        <SolidColorBrush x:Key="TextColor">White</SolidColorBrush>
+        <FontFamily x:Key="MainFont">Millennials</FontFamily>
+    </Application.Resources>
+</Application>

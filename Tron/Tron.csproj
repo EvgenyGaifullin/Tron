@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>disable</Nullable>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Assets\Empty.png" />
+    <None Remove="Assets\HeadGreen.png" />
+    <None Remove="Assets\HeadOrange.png" />
+    <None Remove="Assets\TailGreen.png" />
+    <None Remove="Assets\TailOrange.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\Empty.png" />
+    <Resource Include="Assets\HeadGreen.png" />
+    <Resource Include="Assets\HeadOrange.png" />
+    <Resource Include="Assets\TailGreen.png" />
+    <Resource Include="Assets\TailOrange.png" />
+  </ItemGroup>
+
+</Project>
