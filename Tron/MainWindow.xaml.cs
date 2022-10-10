@@ -31,9 +31,18 @@ namespace Tron
             { GridValue.GreenPlayer, Images.TailGreen },
         };
 
-        private readonly int rows = 25, cols = 25;
+        private readonly Dictionary<Direction, int> dirToRotation = new()
+        {
+            { Direction.Up, 0 },
+            { Direction.Right, 90 },
+            { Direction.Down, 180 },
+            { Direction.Left, 270 }
+        };
+
+        private readonly int rows = 40, cols = 40;
         private readonly Image[,] gridImages;
         private GameState gameState;
+        private bool gameRunning;
 
         public MainWindow()
         {
@@ -42,10 +51,29 @@ namespace Tron
             gameState = new GameState(rows, cols);
         }
 
-        private async void Window_Loaded(object sender, RoutedEventArgs e)
+        private async Task RunGame()
         {
             Draw();
+            await ShowCountDown();
+            Overlay.Visibility = Visibility.Hidden;
             await GameLoop();
+            await ShowGameOver();
+            gameState = new GameState(rows, cols);
+        }
+
+        private async void Window_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (Overlay.Visibility == Visibility.Visible)
+            {
+                e.Handled = true;
+            }
+
+            if (!gameRunning)
+            {
+                gameRunning = true;
+                await RunGame();
+                gameRunning = false;
+            }
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
@@ -58,16 +86,28 @@ namespace Tron
             switch (e.Key)
             {
                 case Key.Left:
-                    gameState.ChangeDirection(Direction.Left);
+                    gameState.ChangeOrangeDirection(Direction.Left);
                     break;
                 case Key.Right:
-                    gameState.ChangeDirection(Direction.Right);
+                    gameState.ChangeOrangeDirection(Direction.Right);
                     break;
                 case Key.Up:
-                    gameState.ChangeDirection(Direction.Up);
+                    gameState.ChangeOrangeDirection(Direction.Up);
                     break;
                 case Key.Down:
-                    gameState.ChangeDirection(Direction.Down);
+                    gameState.ChangeOrangeDirection(Direction.Down);
+                    break;
+                case Key.A:
+                    gameState.ChangeGreenDirection(Direction.Left);
+                    break;
+                case Key.D:
+                    gameState.ChangeGreenDirection(Direction.Right);
+                    break;
+                case Key.W:
+                    gameState.ChangeGreenDirection(Direction.Up);
+                    break;
+                case Key.S:
+                    gameState.ChangeGreenDirection(Direction.Down);
                     break;
             }
         }
@@ -76,7 +116,7 @@ namespace Tron
         {
             while (!gameState.GameOver)
             {
-                await Task.Delay(200);
+                await Task.Delay(70);
                 gameState.MoveOrange();
                 gameState.MoveGreen();
                 Draw();
@@ -95,7 +135,8 @@ namespace Tron
                 {
                     Image image = new Image
                     {
-                        Source = Images.Empty
+                        Source = Images.Empty,
+                        RenderTransformOrigin = new Point(0.5, 0.5)
                     };
 
                     images[r, c] = image;
@@ -109,7 +150,12 @@ namespace Tron
         public void Draw()
         {
             DrawGrid();
+            DrawHeadOrange();
+            DrawHeadGreen();
+            redScoreText.Text = $"ORANGE {gameState.ScoreOrange}";
+            blueScoreText.Text = $"GREEN {gameState.ScoreGreen}";
         }
+
 
         public void DrawGrid()
         {
@@ -119,8 +165,46 @@ namespace Tron
                 {
                     GridValue gridVal = gameState.Grid[r, c];
                     gridImages[r, c].Source = gridValToImage[gridVal];
+                    gridImages[r, c].RenderTransform = Transform.Identity;
                 }
             }
+        }
+
+        private void DrawHeadOrange()
+        {
+            Position headPos = gameState.GetOrangeHeadPos();
+            Image image = gridImages[headPos.Row, headPos.Col];
+            image.Source = Images.HeadOrange;
+
+            int rotation = dirToRotation[gameState.DirOrange];
+            image.RenderTransform = new RotateTransform(rotation);
+
+        }
+        
+        private void DrawHeadGreen()
+        {
+            Position headPos = gameState.GetGreenHeadPos();
+            Image image = gridImages[headPos.Row, headPos.Col];
+            image.Source = Images.HeadGreen;
+
+            int rotation = dirToRotation[gameState.DirGreen];
+            image.RenderTransform = new RotateTransform(rotation);
+
+        }
+
+        private async Task ShowCountDown()
+        {
+            for (int i = 3; i >= 1; i--)
+            {
+                OverlayText.Text = i.ToString();
+                await Task.Delay(500);
+            }
+        }
+        private async Task ShowGameOver()
+        {
+            await Task.Delay(1000);
+            Overlay.Visibility = Visibility.Visible;
+            OverlayText.Text = "Нажмите для запуска игры!";
         }
     }
 }

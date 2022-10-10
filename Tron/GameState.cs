@@ -12,11 +12,14 @@ namespace Tron
         public int Rows { get; }
         public int Cols { get; }
         public GridValue[,] Grid { get; }
-        public Direction Dir { get; private set; }
+        public Direction DirOrange { get; private set; }
+        public Direction DirGreen { get; private set; }
         public int ScoreOrange { get; private set; }
         public int ScoreGreen { get; private set; }
         public bool GameOver { get; private set; }
 
+        private readonly LinkedList<Direction> dirOrangeChanges = new LinkedList<Direction>();
+        private readonly LinkedList<Direction> dirGreenChanges = new LinkedList<Direction>();
         private readonly LinkedList<Position> orangePlayerPos = new LinkedList<Position>();
         private readonly LinkedList<Position> greenPlayerPos = new LinkedList<Position>();
 
@@ -25,7 +28,8 @@ namespace Tron
             Rows = rows;
             Cols = cols;
             Grid = new GridValue[rows, cols];
-            Dir = Direction.Right;
+            DirOrange = Direction.Right;
+            DirGreen = Direction.Right;
 
             AddOrangePlayer();
             AddGreenPlayer();
@@ -108,10 +112,61 @@ namespace Tron
             Grid[tail.Row, tail.Col] = GridValue.Empty;
             greenPlayerPos.RemoveLast();
         }
-
-        public void ChangeDirection(Direction dir)
+        
+        private Direction GetOrangeLastDirection()
         {
-            Dir = dir;
+            if(dirOrangeChanges.Count == 0)
+            {
+                return DirOrange;
+            }
+            return dirOrangeChanges.Last.Value;
+        }
+        
+        private Direction GetGreenLastDirection()
+        {
+            if (dirGreenChanges.Count == 0)
+            {
+                return DirGreen;
+            }
+            return dirGreenChanges.Last.Value;
+        }
+
+        private bool CanOrangeChangeDirection(Direction newDirOrange)
+        {
+            if (dirOrangeChanges.Count == 2)
+            {
+                return false;
+            }
+
+            Direction lastDirOrange = GetOrangeLastDirection();
+            return newDirOrange != lastDirOrange && newDirOrange != lastDirOrange.Opposite();
+        }
+        
+        private bool CanGreenChangeDirection(Direction newDirGreen)
+        {
+            if (dirGreenChanges.Count == 2)
+            {
+                return false;
+            }
+
+            Direction lastDirGreen = GetGreenLastDirection();
+            return newDirGreen != lastDirGreen && newDirGreen != lastDirGreen.Opposite();
+        }
+             
+        public void ChangeOrangeDirection(Direction dirOrange)
+        {
+            if (CanOrangeChangeDirection(dirOrange))
+            {
+                dirOrangeChanges.AddLast(dirOrange);
+            }
+        }
+        
+        public void ChangeGreenDirection(Direction dirGreen)
+        {
+            if (CanGreenChangeDirection(dirGreen))
+            {
+                dirGreenChanges.AddLast(dirGreen);
+            }
         }
 
         private bool OutsideGrid(Position pos)
@@ -136,7 +191,13 @@ namespace Tron
 
         public void MoveOrange()
         {
-            Position newOrangeHeadPos = GetOrangeHeadPos().Translate(Dir);
+            if (dirOrangeChanges.Count > 0)
+            {
+                DirOrange = dirOrangeChanges.First.Value;
+                dirOrangeChanges.RemoveFirst();
+            }
+
+            Position newOrangeHeadPos = GetOrangeHeadPos().Translate(DirOrange);
             GridValue hitOr = WillHit(newOrangeHeadPos);
 
             if (hitOr == GridValue.Outside || hitOr == GridValue.OrangePlayer || hitOr == GridValue.GreenPlayer)
@@ -153,7 +214,13 @@ namespace Tron
 
         public void MoveGreen()
         {
-            Position newGreenHeadPos = GetGreenHeadPos().Translate(Dir);
+            if (dirGreenChanges.Count > 0)
+            {
+                DirGreen = dirGreenChanges.First.Value;
+                dirGreenChanges.RemoveFirst();
+            }
+
+            Position newGreenHeadPos = GetGreenHeadPos().Translate(DirGreen);
             GridValue hitGr = WillHit(newGreenHeadPos);
 
             if (hitGr == GridValue.Outside || hitGr == GridValue.OrangePlayer || hitGr == GridValue.GreenPlayer)
