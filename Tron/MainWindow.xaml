@@ -13,27 +13,27 @@
         WindowStartupLocation="CenterScreen"
 		PreviewKeyDown="Window_PreviewKeyDown"
         KeyDown="Window_KeyDown">
-	<Viewbox>
-		<Grid>
-			<Grid.RowDefinitions>
-				<RowDefinition Height="auto"/>
-				<RowDefinition Height="*"/>
-			</Grid.RowDefinitions>
+    <Viewbox>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-			<TextBlock x:Name="redScoreText"
+            <TextBlock x:Name="redScoreText"
 					   HorizontalAlignment="Left"
 					   VerticalAlignment="Center"
 					   Text="ORANGE: 0"
 					   FontSize="35"
-					   Margin="250,5,0,5"/>
-			<TextBlock x:Name="blueScoreText"
-					   HorizontalAlignment="Right"
-					   VerticalAlignment="Top"
+					   Margin="240,0,0,0"/>
+            <TextBlock x:Name="blueScoreText"
+					   HorizontalAlignment="Left"
+					   VerticalAlignment="Center"
 					   Text="GREEN: 0"
 					   FontSize="35"
-					   Margin="0,5,250,5"/>
+					   Margin="33,0,0,0"/>
 
-			<Border x:Name="GridBorder"
+            <Border x:Name="GridBorder"
 					Grid.Row="1"
 					BorderBrush="{StaticResource GridLineColor}"
 					BorderThickness="1.5"
@@ -41,29 +41,29 @@
 					VerticalAlignment="Center"
 					RenderOptions.EdgeMode="Aliased"
 					Margin ="20,0,20,20">
-				<UniformGrid x:Name="GameGrid"
+                <UniformGrid x:Name="GameGrid"
 							 Width="400"
 							 Height="400"
 							 Background="{StaticResource GridBackgroundColor}"
 							 SnapsToDevicePixels="True"
 							 RenderOptions.BitmapScalingMode="HighQuality">
-				</UniformGrid>
-			</Border>
+                </UniformGrid>
+            </Border>
 
-			<Border x:Name="Overlay"
+            <Border x:Name="Overlay"
 					Grid.Row="1"
 					Background ="{StaticResource GridBackgroundColor}"
 					Width="{Binding Path=ActualWidth, ElementName=GridBorder}"
 					Height="{Binding Path=ActualHeight, ElementName=GridBorder}"
 					Margin="{Binding Path=Margin, ElementName=GridBorder}"
 					RenderOptions.EdgeMode="Aliased">
-				<TextBlock x:Name="OverlayText"
+                <TextBlock x:Name="OverlayText"
 						   Text = "Нажмите для запуская игры!"
 						   FontSize="26"
 						   HorizontalAlignment="Center"
 						   VerticalAlignment="Center"
 						   TextWrapping="Wrap"/>
-			</Border>
-		</Grid>
-	</Viewbox>
+            </Border>
+        </Grid>
+    </Viewbox>
 </Window>

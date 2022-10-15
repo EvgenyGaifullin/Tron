@@ -8,19 +8,19 @@
     "net6.0-windows7.0": []
   },
   "packageFolders": {
-    "C:\\Users\\Александр\\.nuget\\packages\\": {}
+    "C:\\Users\\Евгений\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\VSProjects\\Tron\\Tron\\Tron.csproj",
+      "projectUniqueName": "C:\\Users\\Евгений\\Desktop\\Tron\\Tron\\Tron\\Tron\\Tron.csproj",
       "projectName": "Tron",
-      "projectPath": "D:\\VSProjects\\Tron\\Tron\\Tron.csproj",
-      "packagesPath": "C:\\Users\\Александр\\.nuget\\packages\\",
-      "outputPath": "D:\\VSProjects\\Tron\\Tron\\obj\\",
+      "projectPath": "C:\\Users\\Евгений\\Desktop\\Tron\\Tron\\Tron\\Tron\\Tron.csproj",
+      "packagesPath": "C:\\Users\\Евгений\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Евгений\\Desktop\\Tron\\Tron\\Tron\\Tron\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Александр\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Евгений\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [

@@ -39,7 +39,7 @@ namespace Tron
             { Direction.Left, 270 }
         };
 
-        private readonly int rows = 40, cols = 40;
+        private readonly int rows = 15, cols = 15;
         private readonly Image[,] gridImages;
         private GameState gameState;
         private bool gameRunning;
@@ -116,11 +116,11 @@ namespace Tron
         {
             while (!gameState.GameOver)
             {
-                await Task.Delay(70);
+                await Task.Delay(100);
                 gameState.MoveOrange();
                 gameState.MoveGreen();
                 Draw();
-            }   
+            }
         }
 
         private Image[,] SetupGrid()

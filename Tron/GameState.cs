@@ -23,6 +23,8 @@ namespace Tron
         private readonly LinkedList<Position> orangePlayerPos = new LinkedList<Position>();
         private readonly LinkedList<Position> greenPlayerPos = new LinkedList<Position>();
 
+        private ScoreWriter scoreWriter;
+
         public GameState(int rows, int cols)
         {
             Rows = rows;
@@ -31,15 +33,17 @@ namespace Tron
             DirOrange = Direction.Right;
             DirGreen = Direction.Right;
 
+            scoreWriter = new ScoreWriter();
+
             AddOrangePlayer();
             AddGreenPlayer();
         }
 
         private void AddOrangePlayer()
         {
-            int r = Rows / 4 ;
+            int r = Rows / 4;
 
-            for (int c = 1; c <= 7; c++)
+            for (int c = 1; c <= 9; c++)
             {
                 Grid[r, c] = GridValue.OrangePlayer;
                 orangePlayerPos.AddFirst(new Position(r, c));
@@ -48,9 +52,9 @@ namespace Tron
 
         private void AddGreenPlayer()
         {
-            int r = (Rows / 4) * 3;
+            int r = Rows / 4 * 3;
 
-            for (int c = 1; c <= 7; c++)
+            for (int c = 1; c <= 9; c++)
             {
                 Grid[r, c] = GridValue.GreenPlayer;
                 greenPlayerPos.AddFirst(new Position(r, c));
@@ -61,7 +65,7 @@ namespace Tron
         {
             return orangePlayerPos.First.Value;
         }
-        
+
         public Position GetOrangeTailPos()
         {
             return orangePlayerPos.Last.Value;
@@ -112,16 +116,16 @@ namespace Tron
             Grid[tail.Row, tail.Col] = GridValue.Empty;
             greenPlayerPos.RemoveLast();
         }
-        
+
         private Direction GetOrangeLastDirection()
         {
-            if(dirOrangeChanges.Count == 0)
+            if (dirOrangeChanges.Count == 0)
             {
                 return DirOrange;
             }
             return dirOrangeChanges.Last.Value;
         }
-        
+
         private Direction GetGreenLastDirection()
         {
             if (dirGreenChanges.Count == 0)
@@ -141,7 +145,7 @@ namespace Tron
             Direction lastDirOrange = GetOrangeLastDirection();
             return newDirOrange != lastDirOrange && newDirOrange != lastDirOrange.Opposite();
         }
-        
+
         private bool CanGreenChangeDirection(Direction newDirGreen)
         {
             if (dirGreenChanges.Count == 2)
@@ -152,7 +156,7 @@ namespace Tron
             Direction lastDirGreen = GetGreenLastDirection();
             return newDirGreen != lastDirGreen && newDirGreen != lastDirGreen.Opposite();
         }
-             
+
         public void ChangeOrangeDirection(Direction dirOrange)
         {
             if (CanOrangeChangeDirection(dirOrange))
@@ -160,7 +164,7 @@ namespace Tron
                 dirOrangeChanges.AddLast(dirOrange);
             }
         }
-        
+
         public void ChangeGreenDirection(Direction dirGreen)
         {
             if (CanGreenChangeDirection(dirGreen))
@@ -181,7 +185,7 @@ namespace Tron
                 return GridValue.Outside;
             }
 
-            if(newHeadPos == GetOrangeHeadPos() || newHeadPos == GetGreenHeadPos())
+            if (newHeadPos == GetOrangeHeadPos() || newHeadPos == GetGreenHeadPos())
             {
                 return GridValue.Empty;
             }
@@ -203,8 +207,9 @@ namespace Tron
             if (hitOr == GridValue.Outside || hitOr == GridValue.OrangePlayer || hitOr == GridValue.GreenPlayer)
             {
                 GameOver = true;
+                scoreWriter.writeWiner(ScoreWriter.PATH, ScoreWriter.GREEN);
                 ScoreGreen++;
-            } 
+            }
             else if (hitOr == GridValue.Empty)
             {
                 RemoveOrangeTail();
@@ -226,6 +231,7 @@ namespace Tron
             if (hitGr == GridValue.Outside || hitGr == GridValue.OrangePlayer || hitGr == GridValue.GreenPlayer)
             {
                 GameOver = true;
+                scoreWriter.writeWiner(ScoreWriter.PATH, ScoreWriter.ORANGE);
                 ScoreOrange++;
             }
             else if (hitGr == GridValue.Empty)
